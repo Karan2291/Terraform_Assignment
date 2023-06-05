@@ -1,0 +1,50 @@
+name: "Terraform Infrastructure Provisioning with GitHub Actions"
+ 
+on:
+ push:
+   branches:
+   - main
+ 
+env:
+ # verbosity setting for Terraform logs
+ TF_LOG: INFO
+ # Credentials for deployment to AWS
+ TF_VAR_AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+ TF_VAR_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_ID }}
+ 
+
+jobs:
+ terraform:
+   name: "Terraform Infrastructure Change Management"
+   runs-on: ubuntu-latest
+   defaults:
+     run:
+       shell: bash
+       # We keep Terraform files in the terraform directory.
+       working-directory: ./terraform
+ 
+   steps:
+     - name: Checkout the repository to the runner
+       uses: actions/checkout@v2
+ 
+     - name: Setup Terraform with specified version on the runner
+       uses: hashicorp/setup-terraform@v2
+       with:
+         terraform_version: 1.4.6
+    
+     - name: Terraform init
+       id: init
+       run: terraform init 
+ 
+     - name: Terraform format
+       id: fmt
+       run: terraform fmt
+    
+     - name: Terraform validate
+       id: validate
+       run: terraform validate
+ 
+     - name: Terraform plan
+       id: plan
+       run: terraform plan
+ 
