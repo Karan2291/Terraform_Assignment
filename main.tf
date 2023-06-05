@@ -1,5 +1,5 @@
 # Networking
-resource "aws_vpc" "aws_custom_vpc" {
+resource "aws_vpc" "custom_vpc" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
@@ -7,7 +7,7 @@ resource "aws_vpc" "aws_custom_vpc" {
   }
 }
 
-resource "aws_subnet" "aws_ec2_public_subnet" {
+resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.custom_vpc.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
@@ -18,7 +18,7 @@ resource "aws_subnet" "aws_ec2_public_subnet" {
   }
 }
 
-resource "aws_subnet" "aws_ec2_private_subnet" {
+resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.custom_vpc.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-east-1b"
@@ -29,17 +29,17 @@ resource "aws_subnet" "aws_ec2_private_subnet" {
 }
 
 # SSH-Key
-resource "tls_private_key" "aws_ec2_ssh_key" {
+resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
 }
 
-resource "aws_key_pair" "aws_ec2_ssh_key_pair" {
+resource "aws_key_pair" "ssh_key_pair" {
   key_name   = "ssh-key"
   public_key = tls_private_key.ssh_key.public_key_openssh
 }
 
 # EC2
-resource "aws_instance" "aws_ec2_public_vm" {
+resource "aws_instance" "public_vm" {
   ami           = "ami-abc123"
   instance_type = "t2.micro"
   key_name      = aws_key_pair.ssh_key_pair.key_name
@@ -58,7 +58,7 @@ resource "aws_instance" "aws_ec2_public_vm" {
   }
 }
 
-resource "aws_instance" "aws_ec2_private_vm" {
+resource "aws_instance" "private_vm" {
   ami           = "ami-xyz789"
   instance_type = "t2.micro"
   key_name      = aws_key_pair.ssh_key_pair.key_name
