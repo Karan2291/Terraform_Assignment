@@ -15,13 +15,13 @@ env:
 
 jobs:
  terraform:
-   name: "Terraform Infrastructure Change Management"
+   name: "Terraform Infrastructure Provisioning"
    runs-on: ubuntu-latest
    defaults:
      run:
        shell: bash
        # We keep Terraform files in the terraform directory.
-       working-directory: ./terraform
+       working-directory: ./
  
    steps:
      - name: Checkout the repository to the runner
